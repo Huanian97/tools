@@ -1,0 +1,29 @@
+<style>
+body { word-break: break-all; margin: 0 1em; min-height: 100vh; font-family: Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", monospace; }
+.empty::before{position: absolute; font-size: 50px; content: '任意文件\A拖到这里'; white-space: pre; left: 50%; top: 50%; transform: translate(-50%,-50%); color: gray;}
+</style>
+<script>
+window.addEventListener("dragenter", function(event) { event.preventDefault(); }, false);
+window.addEventListener("dragover", function(event) { event.preventDefault(); }, false);
+window.addEventListener("drop", function(event) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+	  let html = '<p>' + e.target.result + '</p>';
+      document.body.innerHTML = html;
+	  document.body.classList.remove('empty');
+      try {
+        let input = document.createElement("input");
+        input.value = e.target.result;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("Copy");
+        document.body.removeChild(input);
+      } catch (e) {
+      }
+    };
+    reader.readAsDataURL(event.dataTransfer.files[0]);
+	event.preventDefault();
+}, false);
+</script>
+<body class="empty">
+</body>
